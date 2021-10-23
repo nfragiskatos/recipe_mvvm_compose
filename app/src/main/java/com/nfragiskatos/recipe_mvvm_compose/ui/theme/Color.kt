@@ -27,3 +27,6 @@ val Red300 = Color(0xFFFF8B7B)
 
 // Dark
 val Red900 = Color(0xFFB12426)
+
+
+val LightGray = Color(0xFFF2F2F2)
