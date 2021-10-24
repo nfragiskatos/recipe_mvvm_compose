@@ -1,6 +1,7 @@
 package com.nfragiskatos.recipe_mvvm_compose.ui.di
 
 import android.app.Application
+import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
 import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModelFactory
 import dagger.Module
@@ -17,11 +18,13 @@ class FactoryModule {
     @Singleton
     fun provideRecipeListViewModelFactory(
         app: Application,
-        getSearchedRecipesUseCase: GetSearchedRecipesUseCase
+        getSearchedRecipesUseCase: GetSearchedRecipesUseCase,
+        getRecipeByIdUseCase: GetRecipeByIdUseCase
     ): RecipeListViewModelFactory {
         return RecipeListViewModelFactory(
             app,
-            getSearchedRecipesUseCase
+            getSearchedRecipesUseCase,
+            getRecipeByIdUseCase
         )
     }
 }

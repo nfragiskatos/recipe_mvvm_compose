@@ -11,12 +11,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nfragiskatos.recipe_mvvm_compose.data.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.data.util.Resource
+import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
 import kotlinx.coroutines.launch
 
 class RecipeListViewModel(
     private val app: Application,
-    private val getSearchedRecipesUseCase: GetSearchedRecipesUseCase
+    private val getSearchedRecipesUseCase: GetSearchedRecipesUseCase,
+    private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : AndroidViewModel(app) {
 
     val recipes: MutableLiveData<Resource<RecipeAPIResponse>> = MutableLiveData()
@@ -34,6 +36,23 @@ class RecipeListViewModel(
                 recipes.postValue(response)
             } else {
                 recipes.postValue(Resource.Error("Internet Not Available"))
+            }
+
+        } catch (e: Exception) {
+            Log.i(
+                "MY_TAG",
+                e.message.toString()
+            )
+        }
+    }
+
+    fun getRecipeById(id: Int) = viewModelScope.launch {
+        try {
+            if (isNetworkAvailable(app)) {
+                val response = getRecipeByIdUseCase.execute(id)
+
+            } else {
+
             }
 
         } catch (e: Exception) {

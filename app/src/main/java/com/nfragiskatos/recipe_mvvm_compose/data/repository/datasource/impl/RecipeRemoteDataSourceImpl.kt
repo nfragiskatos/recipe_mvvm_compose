@@ -1,6 +1,7 @@
 package com.nfragiskatos.recipe_mvvm_compose.data.repository.datasource.impl
 
 import com.nfragiskatos.recipe_mvvm_compose.data.api.RecipeAPIService
+import com.nfragiskatos.recipe_mvvm_compose.data.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.data.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.data.repository.datasource.RecipeRemoteDataSource
 import retrofit2.Response
@@ -16,5 +17,9 @@ class RecipeRemoteDataSourceImpl(
             page,
             query
         )
+    }
+
+    override suspend fun getRecipeById(id: Int): Response<Recipe> {
+        return recipeAPIService.getRecipeById(id)
     }
 }
