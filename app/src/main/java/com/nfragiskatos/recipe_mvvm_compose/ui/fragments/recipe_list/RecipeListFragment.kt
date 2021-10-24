@@ -1,4 +1,4 @@
-package com.nfragiskatos.recipe_mvvm_compose
+package com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
