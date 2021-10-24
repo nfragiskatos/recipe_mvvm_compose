@@ -1,54 +1,54 @@
 package com.nfragiskatos.recipe_mvvm_compose.data.model.network
 
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
-import com.nfragiskatos.recipe_mvvm_compose.domain.util.DataMapper
+import com.nfragiskatos.recipe_mvvm_compose.domain.util.DomainMapper
 
-class RecipeDTOMapper : DataMapper<RecipeDTO, Recipe> {
-    override fun mapFromData(data: RecipeDTO): Recipe {
+class RecipeDTOMapper : DomainMapper<RecipeDTO, Recipe> {
+    override fun mapToDomainModel(model: RecipeDTO): Recipe {
         return Recipe(
-            id = data.id,
-            cookingInstructions = data.cookingInstructions ?: "",
-            dateAdded = data.dateAdded ?: "",
-            dateUpdated = data.dateUpdated ?: "",
-            description = data.description ?: "",
-            featuredImage = data.featuredImage ?: "",
-            ingredients = data.ingredients ?: listOf(),
-            longDateAdded = data.longDateAdded ?: 0,
-            longDateUpdated = data.longDateUpdated ?: 0,
-            publisher = data.publisher ?: "",
-            rating = data.rating ?: 0,
-            sourceUrl = data.sourceUrl ?: "",
-            title = data.title ?: "",
+            id = model.id,
+            cookingInstructions = model.cookingInstructions ?: "",
+            dateAdded = model.dateAdded ?: "",
+            dateUpdated = model.dateUpdated ?: "",
+            description = model.description ?: "",
+            featuredImage = model.featuredImage ?: "",
+            ingredients = model.ingredients ?: listOf(),
+            longDateAdded = model.longDateAdded ?: 0,
+            longDateUpdated = model.longDateUpdated ?: 0,
+            publisher = model.publisher ?: "",
+            rating = model.rating ?: 0,
+            sourceUrl = model.sourceUrl ?: "",
+            title = model.title ?: "",
         )
     }
 
-    override fun mapToData(domain: Recipe): RecipeDTO {
+    override fun mapFromDomainModel(domainModel: Recipe): RecipeDTO {
         return RecipeDTO(
-            id = domain.id,
-            cookingInstructions = domain.cookingInstructions,
-            dateAdded = domain.dateAdded,
-            dateUpdated = domain.dateUpdated,
-            description = domain.description,
-            featuredImage = domain.featuredImage,
-            ingredients = domain.ingredients,
-            longDateAdded = domain.longDateAdded,
-            longDateUpdated = domain.longDateUpdated,
-            publisher = domain.publisher,
-            rating = domain.rating,
-            sourceUrl = domain.sourceUrl,
-            title = domain.title,
+            id = domainModel.id,
+            cookingInstructions = domainModel.cookingInstructions,
+            dateAdded = domainModel.dateAdded,
+            dateUpdated = domainModel.dateUpdated,
+            description = domainModel.description,
+            featuredImage = domainModel.featuredImage,
+            ingredients = domainModel.ingredients,
+            longDateAdded = domainModel.longDateAdded,
+            longDateUpdated = domainModel.longDateUpdated,
+            publisher = domainModel.publisher,
+            rating = domainModel.rating,
+            sourceUrl = domainModel.sourceUrl,
+            title = domainModel.title,
         )
     }
 
-    fun mapFromDataList(dtos: List<RecipeDTO>): List<Recipe> {
-        return dtos.map {
-            mapFromData(it)
+    fun mapToDomainModelList(models: List<RecipeDTO>): List<Recipe> {
+        return models.map {
+            mapToDomainModel(it)
         }
     }
 
-    fun mapToDataList(recipes: List<Recipe>): List<RecipeDTO> {
-        return recipes.map {
-            mapToData(it)
+    fun mapFromDomainModelList(domainModels: List<Recipe>): List<RecipeDTO> {
+        return domainModels.map {
+            mapFromDomainModel(it)
         }
     }
 }

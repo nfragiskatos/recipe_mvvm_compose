@@ -37,7 +37,7 @@ class RecipeRepositoryImpl(
         if (response.isSuccessful) {
             response.body()
                 ?.let {
-                    return Resource.Success(recipeAPIResponseDTOMapper.mapFromData(it))
+                    return Resource.Success(recipeAPIResponseDTOMapper.mapToDomainModel(it))
                 }
         }
         return Resource.Error(response.message())
@@ -47,7 +47,7 @@ class RecipeRepositoryImpl(
         if (response.isSuccessful) {
             response.body()
                 ?.let {
-                    return Resource.Success(recipeDTOMapper.mapFromData(it))
+                    return Resource.Success(recipeDTOMapper.mapToDomainModel(it))
                 }
         }
         return Resource.Error(response.message())

@@ -22,7 +22,7 @@ class RecipeAPIServiceTest() {
     fun setUp() {
         server = MockWebServer()
         service = Retrofit.Builder()
-            .baseUrl(server.url(BuildConfig.RECIPE_API_BASE_URL))
+            .baseUrl(server.url(""))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RecipeAPIService::class.java)
