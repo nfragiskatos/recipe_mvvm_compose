@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.google.common.truth.Truth.assertThat
 
 class RecipeAPIServiceTest {
 
@@ -21,15 +22,31 @@ class RecipeAPIServiceTest {
     }
 
     @Test
-    fun getSearchedHeadlines_sentRequest_receivedExpected() {
+    fun getSearchedRecipes_sentRequest_receivedExpected() {
+        runBlocking {
+            val response = service.getSearchedRecipes(
+                1,
+                "chicken"
+            )
+
+            assertThat(response.isSuccessful).isTrue()
+
+            val body = response.body()
+
+            assertThat(body).isNotNull()
+        }
+    }
+
+    @Test
+    fun getSearchedRecipes_receivedResponse_correctPageSize() {
         runBlocking {
             val body = service.getSearchedRecipes(
                 1,
                 "chicken"
-            )
-                .body()
+            ).body()
 
-            assert(body != null)
+            assertThat(body).isNotNull()
+            assertThat(body!!.results.size).isEqualTo(30)
         }
     }
 }
