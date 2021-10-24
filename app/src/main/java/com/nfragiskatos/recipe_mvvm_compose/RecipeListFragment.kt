@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
 import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModel
 import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModelFactory
@@ -61,11 +60,11 @@ class RecipeListFragment : Fragment() {
                         Spacer(modifier = Modifier.padding(10.dp))
                         Button(onClick = {
 //                            findNavController().navigate(R.id.action_recipeListFragment_to_recipeFragment)
-//                            viewModel.getSearchedRecipes(
-//                                1,
-//                                "chicken"
-//                            )
-                            viewModel.getRecipeById(9)
+                            viewModel.getSearchedRecipes(
+                                1,
+                                "chicken"
+                            )
+//                            viewModel.getRecipeById(9)
                         }) {
                             Text(text = "TO RECIPE FRAGMENT")
                         }

@@ -9,8 +9,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.nfragiskatos.recipe_mvvm_compose.data.model.network.RecipeAPIResponseDTO
 import com.nfragiskatos.recipe_mvvm_compose.data.util.Resource
+import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ class RecipeListViewModel(
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : AndroidViewModel(app) {
 
-    val recipes: MutableLiveData<Resource<RecipeAPIResponseDTO>> = MutableLiveData()
+    val recipes: MutableLiveData<Resource<RecipeAPIResponse>> = MutableLiveData()
 
     fun getSearchedRecipes(
         page: Int,
@@ -29,7 +29,7 @@ class RecipeListViewModel(
     ) = viewModelScope.launch {
         try {
             if (isNetworkAvailable(app)) {
-                val response: Resource<RecipeAPIResponseDTO> = getSearchedRecipesUseCase.execute(
+                val response: Resource<RecipeAPIResponse> = getSearchedRecipesUseCase.execute(
                     page,
                     query
                 )
