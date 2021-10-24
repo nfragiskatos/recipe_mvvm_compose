@@ -12,11 +12,10 @@ import com.nfragiskatos.recipe_mvvm_compose.domain.repository.RecipeRepository
 import retrofit2.Response
 
 class RecipeRepositoryImpl(
-    private val recipeRemoteDataSource: RecipeRemoteDataSource
+    private val recipeRemoteDataSource: RecipeRemoteDataSource,
+    private val recipeAPIResponseDTOMapper: RecipeAPIResponseDTOMapper,
+    private val recipeDTOMapper: RecipeDTOMapper
 ) : RecipeRepository {
-
-    private val responseMapper = RecipeAPIResponseDTOMapper()
-    private val recipeMapper = RecipeDTOMapper()
 
     override suspend fun getSearchedRecipes(
         page: Int,
@@ -38,7 +37,7 @@ class RecipeRepositoryImpl(
         if (response.isSuccessful) {
             response.body()
                 ?.let {
-                    return Resource.Success(responseMapper.mapFromData(it))
+                    return Resource.Success(recipeAPIResponseDTOMapper.mapFromData(it))
                 }
         }
         return Resource.Error(response.message())
@@ -48,7 +47,7 @@ class RecipeRepositoryImpl(
         if (response.isSuccessful) {
             response.body()
                 ?.let {
-                    return Resource.Success(recipeMapper.mapFromData(it))
+                    return Resource.Success(recipeDTOMapper.mapFromData(it))
                 }
         }
         return Resource.Error(response.message())
