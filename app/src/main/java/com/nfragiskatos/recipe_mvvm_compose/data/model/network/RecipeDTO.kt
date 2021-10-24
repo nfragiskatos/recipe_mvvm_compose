@@ -1,10 +1,10 @@
-package com.nfragiskatos.recipe_mvvm_compose.data.model
+package com.nfragiskatos.recipe_mvvm_compose.data.model.network
 
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Recipe(
+data class RecipeDTO(
     @SerializedName("pk")
     val id: Int,
 

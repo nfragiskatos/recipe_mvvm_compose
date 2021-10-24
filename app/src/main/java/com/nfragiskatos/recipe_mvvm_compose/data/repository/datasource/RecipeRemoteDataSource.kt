@@ -1,7 +1,7 @@
 package com.nfragiskatos.recipe_mvvm_compose.data.repository.datasource
 
-import com.nfragiskatos.recipe_mvvm_compose.data.model.Recipe
-import com.nfragiskatos.recipe_mvvm_compose.data.model.RecipeAPIResponse
+import com.nfragiskatos.recipe_mvvm_compose.data.model.network.RecipeDTO
+import com.nfragiskatos.recipe_mvvm_compose.data.model.network.RecipeAPIResponseDTO
 import retrofit2.Response
 
 interface RecipeRemoteDataSource {
@@ -9,7 +9,7 @@ interface RecipeRemoteDataSource {
     suspend fun getSearchedRecipes(
         page: Int,
         query: String
-    ): Response<RecipeAPIResponse>
+    ): Response<RecipeAPIResponseDTO>
 
-    suspend fun getRecipeById(id: Int): Response<Recipe>
+    suspend fun getRecipeById(id: Int): Response<RecipeDTO>
 }

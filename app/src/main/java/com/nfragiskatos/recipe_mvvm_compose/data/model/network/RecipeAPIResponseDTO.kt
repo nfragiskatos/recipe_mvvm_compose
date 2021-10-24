@@ -1,10 +1,10 @@
-package com.nfragiskatos.recipe_mvvm_compose.data.model
+package com.nfragiskatos.recipe_mvvm_compose.data.model.network
 
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class RecipeAPIResponse(
+data class RecipeAPIResponseDTO(
     @SerializedName("count")
     val count: Int,
     @SerializedName("next")
@@ -12,5 +12,5 @@ data class RecipeAPIResponse(
     @SerializedName("previous")
     val previous: String?,
     @SerializedName("results")
-    val results: List<Recipe>
+    val results: List<RecipeDTO>
 ) : Serializable

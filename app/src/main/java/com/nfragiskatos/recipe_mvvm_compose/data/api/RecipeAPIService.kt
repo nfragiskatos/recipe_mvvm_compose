@@ -1,7 +1,7 @@
 package com.nfragiskatos.recipe_mvvm_compose.data.api
 
-import com.nfragiskatos.recipe_mvvm_compose.data.model.Recipe
-import com.nfragiskatos.recipe_mvvm_compose.data.model.RecipeAPIResponse
+import com.nfragiskatos.recipe_mvvm_compose.data.model.network.RecipeDTO
+import com.nfragiskatos.recipe_mvvm_compose.data.model.network.RecipeAPIResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -20,7 +20,7 @@ interface RecipeAPIService {
 
         @Header("Authorization")
         authorization: String = "Token 9c8b06d329136da358c2d00e76946b0111ce2c48"
-    ): Response<RecipeAPIResponse>
+    ): Response<RecipeAPIResponseDTO>
 
     @GET("/api/recipe/get")
     suspend fun getRecipeById(
@@ -29,5 +29,5 @@ interface RecipeAPIService {
         
         @Header("Authorization")
         authorization: String = "Token 9c8b06d329136da358c2d00e76946b0111ce2c48"
-    ): Response<Recipe>
+    ): Response<RecipeDTO>
 }
