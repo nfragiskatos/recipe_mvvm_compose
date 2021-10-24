@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
+    id "dagger.hilt.android.plugin"
 }
 
 android {
@@ -39,6 +40,7 @@ android {
     }
     buildFeatures {
         compose true
+        dataBinding true
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
@@ -53,10 +55,18 @@ android {
 
 dependencies {
     def nav_version = "2.3.5"
+    def lifecycle_version = "2.4.0-rc01"
 
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Annotation processor
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.8'
@@ -70,7 +80,6 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.38.1"
     // ...with Kotlin.
     kaptTest("com.google.dagger:hilt-android-compiler:2.38.1")
-
 
 
     implementation 'androidx.core:core-ktx:1.6.0'
