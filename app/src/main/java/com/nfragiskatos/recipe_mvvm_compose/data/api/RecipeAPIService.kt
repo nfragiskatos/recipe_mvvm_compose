@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface RecipeAPIService {
 
-    @GET("/api/recipe/search")
+    @GET("search")
     suspend fun getSearchedRecipes(
 
         @Query("page")
@@ -22,7 +22,7 @@ interface RecipeAPIService {
         authorization: String = "Token 9c8b06d329136da358c2d00e76946b0111ce2c48"
     ): Response<RecipeAPIResponseDTO>
 
-    @GET("/api/recipe/get")
+    @GET("get")
     suspend fun getRecipeById(
         @Query("id")
         id: Int,

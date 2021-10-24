@@ -7,6 +7,7 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.common.truth.Truth.assertThat
+import com.nfragiskatos.recipe_mvvm_compose.BuildConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.buffer
@@ -21,7 +22,7 @@ class RecipeAPIServiceTest() {
     fun setUp() {
         server = MockWebServer()
         service = Retrofit.Builder()
-            .baseUrl(server.url(""))
+            .baseUrl(server.url(BuildConfig.RECIPE_API_BASE_URL))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RecipeAPIService::class.java)
@@ -52,7 +53,7 @@ class RecipeAPIServiceTest() {
 
 
             assertThat(body).isNotNull()
-            assertThat(request.path).isEqualTo("/api/recipe/search?page=1&query=chicken")
+            assertThat(request.path).isEqualTo("/search?page=1&query=chicken")
             assertThat(authHeader).isEqualTo("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
         }
     }
@@ -85,7 +86,7 @@ class RecipeAPIServiceTest() {
             val authHeader = request.getHeader("Authorization")
 
             assertThat(body).isNotNull()
-            assertThat(request.path).isEqualTo("/api/recipe/get?id=9")
+            assertThat(request.path).isEqualTo("/get?id=9")
             assertThat(authHeader).isEqualTo("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
         }
     }
