@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
-import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModel
-import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModelFactory
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.viewmodel.RecipeListViewModel
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.viewmodel.RecipeListViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
