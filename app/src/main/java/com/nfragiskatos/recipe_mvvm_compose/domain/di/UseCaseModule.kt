@@ -6,21 +6,23 @@ import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUse
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 class UseCaseModule {
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideGetSearchedRecipesUseCase(recipeRepository: RecipeRepository): GetSearchedRecipesUseCase {
         return GetSearchedRecipesUseCase(recipeRepository)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideGetRecipeByIdUseCase(recipeRepository: RecipeRepository): GetRecipeByIdUseCase {
         return GetRecipeByIdUseCase(recipeRepository)
     }

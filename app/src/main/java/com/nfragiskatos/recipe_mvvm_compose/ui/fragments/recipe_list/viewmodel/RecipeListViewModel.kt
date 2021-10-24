@@ -13,13 +13,21 @@ import com.nfragiskatos.recipe_mvvm_compose.data.util.Resource
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecipeListViewModel(
+@HiltViewModel
+class RecipeListViewModel @Inject constructor(
     private val app: Application,
     private val getSearchedRecipesUseCase: GetSearchedRecipesUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : AndroidViewModel(app) {
+
+    init {
+        Log.i("MY_TAG", "RecipeListViewModel Dep - getSearchedRecipesUseCase = $getSearchedRecipesUseCase")
+        Log.i("MY_TAG", "RecipeListViewModel Dep - getRecipeByIdUseCase = $getRecipeByIdUseCase")
+    }
 
     val recipes: MutableLiveData<Resource<RecipeAPIResponse>> = MutableLiveData()
 
