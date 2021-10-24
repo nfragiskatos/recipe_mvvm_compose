@@ -17,17 +17,34 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
+import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModel
+import com.nfragiskatos.recipe_mvvm_compose.ui.viewmodel.RecipeListViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @ExperimentalUnitApi
+@AndroidEntryPoint
 class RecipeListFragment : Fragment() {
 
+    @Inject
+    lateinit var factory: RecipeListViewModelFactory
+
+    lateinit var viewModel: RecipeListViewModel
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(
+            this,
+            factory
+        )[RecipeListViewModel::class.java]
+//        viewModel = (activity as MainActivity).viewModel
         return ComposeView(requireContext()).apply {
             setContent {
                 Recipe_mvvm_composeTheme() {
@@ -35,12 +52,19 @@ class RecipeListFragment : Fragment() {
                         Text(
                             text = "Recipe List",
                             style = TextStyle(
-                                fontSize = TextUnit(17f, TextUnitType.Sp)
+                                fontSize = TextUnit(
+                                    17f,
+                                    TextUnitType.Sp
+                                )
                             )
                         )
                         Spacer(modifier = Modifier.padding(10.dp))
                         Button(onClick = {
-                            findNavController().navigate(R.id.action_recipeListFragment_to_recipeFragment)
+//                            findNavController().navigate(R.id.action_recipeListFragment_to_recipeFragment)
+                            viewModel.getSearchedRecipes(
+                                1,
+                                "chicken"
+                            )
                         }) {
                             Text(text = "TO RECIPE FRAGMENT")
                         }
