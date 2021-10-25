@@ -1,9 +1,10 @@
 package com.nfragiskatos.recipe_mvvm_compose.data.model.network
 
+import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.util.DomainMapper
 
-class RecipeAPIResponseDTOMapper(private val recipeDTOMapper: RecipeDTOMapper) : DomainMapper<RecipeAPIResponseDTO, RecipeAPIResponse> {
+class RecipeAPIResponseDTOMapper(private val recipeDTOMapper: DomainMapper<RecipeDTO, Recipe>) : DomainMapper<RecipeAPIResponseDTO, RecipeAPIResponse> {
     override fun mapToDomainModel(model: RecipeAPIResponseDTO): RecipeAPIResponse {
         return RecipeAPIResponse(
             count = model.count,

@@ -9,12 +9,13 @@ import com.nfragiskatos.recipe_mvvm_compose.data.util.Resource
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.repository.RecipeRepository
+import com.nfragiskatos.recipe_mvvm_compose.domain.util.DomainMapper
 import retrofit2.Response
 
 class RecipeRepositoryImpl(
     private val recipeRemoteDataSource: RecipeRemoteDataSource,
-    private val recipeAPIResponseDTOMapper: RecipeAPIResponseDTOMapper,
-    private val recipeDTOMapper: RecipeDTOMapper
+    private val recipeAPIResponseDTOMapper: DomainMapper<RecipeAPIResponseDTO, RecipeAPIResponse>,
+    private val recipeDTOMapper: DomainMapper<RecipeDTO, Recipe>
 ) : RecipeRepository {
 
     override suspend fun getSearchedRecipes(

@@ -39,16 +39,4 @@ class RecipeDTOMapper : DomainMapper<RecipeDTO, Recipe> {
             title = domainModel.title,
         )
     }
-
-    fun mapToDomainModelList(models: List<RecipeDTO>): List<Recipe> {
-        return models.map {
-            mapToDomainModel(it)
-        }
-    }
-
-    fun mapFromDomainModelList(domainModels: List<Recipe>): List<RecipeDTO> {
-        return domainModels.map {
-            mapFromDomainModel(it)
-        }
-    }
 }
