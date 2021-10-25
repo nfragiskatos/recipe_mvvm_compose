@@ -1,4 +1,4 @@
-package com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.viewmodel
+package com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list
 
 import android.app.Application
 import android.content.Context

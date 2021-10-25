@@ -22,7 +22,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nfragiskatos.recipe_mvvm_compose.R
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
-import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.viewmodel.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
