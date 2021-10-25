@@ -1,4 +1,4 @@
-package com.nfragiskatos.recipe_mvvm_compose.domain.di
+package com.nfragiskatos.recipe_mvvm_compose.di
 
 import com.nfragiskatos.recipe_mvvm_compose.domain.repository.RecipeRepository
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase

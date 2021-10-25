@@ -1,4 +1,4 @@
-package com.nfragiskatos.recipe_mvvm_compose.data.di
+package com.nfragiskatos.recipe_mvvm_compose.di
 
 import com.nfragiskatos.recipe_mvvm_compose.data.api.RecipeAPIService
 import com.nfragiskatos.recipe_mvvm_compose.data.repository.datasource.RecipeRemoteDataSource
