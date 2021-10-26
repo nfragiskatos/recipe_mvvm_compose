@@ -11,16 +11,6 @@ class GetSearchedRecipesUseCase(private val recipeRepository: RecipeRepository) 
         page: Int,
         query: String
     ): Resource<RecipeAPIResponse> {
-
-        val resource = recipeRepository.getSearchedRecipes(
-            page,
-            query
-        )
-        
-        resource.data?.results?.forEachIndexed { index, recipe ->
-            Log.i("MY_TAG", "item $index - ${recipe.title}")
-        }
-
         return recipeRepository.getSearchedRecipes(
             page,
             query

@@ -6,10 +6,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nfragiskatos.recipe_mvvm_compose.data.util.Resource
+import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
@@ -23,13 +27,16 @@ class RecipeListViewModel @Inject constructor(
     private val getSearchedRecipesUseCase: GetSearchedRecipesUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : AndroidViewModel(app) {
-
     init {
         Log.i("MY_TAG", "RecipeListViewModel Dep - getSearchedRecipesUseCase = $getSearchedRecipesUseCase")
         Log.i("MY_TAG", "RecipeListViewModel Dep - getRecipeByIdUseCase = $getRecipeByIdUseCase")
     }
 
-    val recipes: MutableLiveData<Resource<RecipeAPIResponse>> = MutableLiveData()
+    val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
+
+    init {
+        getSearchedRecipes(1, "chicken")
+    }
 
     fun getSearchedRecipes(
         page: Int,
@@ -41,9 +48,9 @@ class RecipeListViewModel @Inject constructor(
                     page,
                     query
                 )
-                recipes.postValue(response)
+                resource.value = response
             } else {
-                recipes.postValue(Resource.Error("Internet Not Available"))
+                resource.value = Resource.Error("Internet Not Available")
             }
 
         } catch (e: Exception) {
