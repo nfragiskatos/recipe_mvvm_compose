@@ -9,12 +9,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nfragiskatos.recipe_mvvm_compose.R
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
+import com.nfragiskatos.recipe_mvvm_compose.domain.util.DEFAULT_RECIPE_IMAGE
+import com.nfragiskatos.recipe_mvvm_compose.domain.util.loadPictures
 
 @Composable
 fun RecipeCard(
@@ -36,15 +39,21 @@ fun RecipeCard(
         elevation = 8.dp
     ) {
         Column() {
-            recipe.featuredImage?.let { url ->
-                Image(
-                    painter = painterResource(id = R.drawable.empty_plate),
-                    contentDescription = "food",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(225.dp),
-                    contentScale = ContentScale.Crop
-                )
+            recipe.featuredImage.let { url ->
+                val image = loadPictures(
+                    url = url,
+                    defaultImage = DEFAULT_RECIPE_IMAGE
+                ).value
+                image?.let {
+                    Image(
+                        bitmap = image.asImageBitmap(),
+                        contentDescription = "food",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(225.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
             recipe.title?.let { title ->
                 Row(
@@ -65,7 +74,9 @@ fun RecipeCard(
                         style = MaterialTheme.typography.h5
                     )
                     Text(text = recipe.rating.toString(),
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.End)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.End)
                         .align(Alignment.CenterVertically),
                     style = MaterialTheme.typography.h6)
                 }
