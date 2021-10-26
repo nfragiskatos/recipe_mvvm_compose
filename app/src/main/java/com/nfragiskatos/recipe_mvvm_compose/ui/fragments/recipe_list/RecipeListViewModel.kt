@@ -33,9 +33,14 @@ class RecipeListViewModel @Inject constructor(
     }
 
     val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
+    val query = mutableStateOf("chicken")
 
     init {
         getSearchedRecipes(1, "chicken")
+    }
+
+    fun onQueryChange(query: String) {
+        this.query.value = query
     }
 
     fun getSearchedRecipes(

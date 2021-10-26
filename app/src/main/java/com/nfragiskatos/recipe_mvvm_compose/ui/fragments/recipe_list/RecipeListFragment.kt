@@ -10,19 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.ExperimentalUnitApi
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.RecipeCard
-import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -48,17 +43,32 @@ class RecipeListFragment : Fragment() {
             setContent {
 
                 val resource = viewModel.resource.value
-                val recipes = resource.data?.results?: listOf()
-                
-                LazyColumn() {
-                    itemsIndexed(
-                        items = recipes
-                    ) {index, item ->  
-                        RecipeCard(
-                            recipe = item,
-                            onClick =  {
-                            Log.i("MY_TAG", "You clicked on ${item.title}")
-                        })
+                val recipes = resource.data?.results ?: listOf()
+
+                Column() {
+
+                    TextField(
+                        value = viewModel.query.value,
+                        onValueChange = { query ->
+                            viewModel.onQueryChange(query)
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.padding(10.dp))
+
+                    LazyColumn() {
+                        itemsIndexed(
+                            items = recipes
+                        ) { index, item ->
+                            RecipeCard(
+                                recipe = item,
+                                onClick = {
+                                    Log.i(
+                                        "MY_TAG",
+                                        "You clicked on ${item.title}"
+                                    )
+                                })
+                        }
                     }
                 }
             }
