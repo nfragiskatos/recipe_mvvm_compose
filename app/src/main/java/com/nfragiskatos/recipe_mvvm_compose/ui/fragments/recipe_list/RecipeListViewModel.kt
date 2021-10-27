@@ -36,7 +36,7 @@ class RecipeListViewModel @Inject constructor(
     val query = mutableStateOf("chicken")
 
     init {
-        getSearchedRecipes(1, "chicken")
+        getSearchedRecipes(1, query.value)
     }
 
     fun onQueryChange(query: String) {
