@@ -5,11 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,6 +62,7 @@ class RecipeListFragment : Fragment() {
                     val recipes = resource.data?.results ?: listOf()
                     val query = viewModel.query.value
                     val focusManager = LocalFocusManager.current
+                    val categories = FoodCategory.values()
 
                     Column() {
 
@@ -65,43 +71,58 @@ class RecipeListFragment : Fragment() {
                             modifier = Modifier.fillMaxWidth(),
                             color = MaterialTheme.colors.primary
                         ) {
-
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                TextField(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.9f)
-                                        .padding(8.dp),
-                                    value = query,
-                                    onValueChange = { query ->
-                                        viewModel.onQueryChange(query)
-                                    },
-                                    label = {
-                                        Text(text = "Search")
-                                    },
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Search
-                                    ),
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.Search,
-                                            contentDescription = "search"
+                            Column() {
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    TextField(
+                                        modifier = Modifier
+                                            .fillMaxWidth(0.9f)
+                                            .padding(8.dp),
+                                        value = query,
+                                        onValueChange = { query ->
+                                            viewModel.onQueryChange(query)
+                                        },
+                                        label = {
+                                            Text(text = "Search")
+                                        },
+                                        keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            imeAction = ImeAction.Search
+                                        ),
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Filled.Search,
+                                                contentDescription = "search"
+                                            )
+                                        },
+                                        keyboardActions = KeyboardActions(onSearch = {
+                                            viewModel.getSearchedRecipes(
+                                                1,
+                                                query
+                                            )
+                                            focusManager.clearFocus()
+                                        }),
+                                        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                                        colors = TextFieldDefaults.textFieldColors(
+                                            backgroundColor = MaterialTheme.colors.surface
                                         )
-                                    },
-                                    keyboardActions = KeyboardActions(onSearch = {
-                                        viewModel.getSearchedRecipes(
-                                            1,
-                                            query
-                                        )
-                                        focusManager.clearFocus()
-                                    }),
-                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        backgroundColor = MaterialTheme.colors.surface
                                     )
-                                )
-                            }
+                                }
 
+                                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                                    items(
+                                        items = categories
+                                    ) { category ->
+                                        Text(
+                                            text = category.value,
+                                            style = MaterialTheme.typography.body2,
+                                            color = MaterialTheme.colors.onSecondary,
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .background(color = MaterialTheme.colors.secondary),
+                                        )
+                                    }
+                                }
+                            }
                         }
                         LazyColumn() {
                             itemsIndexed(
