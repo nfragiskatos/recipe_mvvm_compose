@@ -38,7 +38,7 @@ class RecipeListViewModel @Inject constructor(
     var chipPosition: Int = 0
 
     init {
-        getSearchedRecipes(1)
+        getSearchedRecipes()
     }
 
     fun onQueryChange(query: String) {
@@ -52,12 +52,11 @@ class RecipeListViewModel @Inject constructor(
     }
 
     fun getSearchedRecipes(
-        page: Int,
     ) = viewModelScope.launch {
         try {
             if (isNetworkAvailable(app)) {
                 val response: Resource<RecipeAPIResponse> = getSearchedRecipesUseCase.execute(
-                    page,
+                    1,
                     query.value
                 )
                 resource.value = response
