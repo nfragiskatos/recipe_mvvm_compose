@@ -64,6 +64,7 @@ class RecipeListFragment : Fragment() {
                     val query = viewModel.query.value
                     val focusManager = LocalFocusManager.current
                     val categories = FoodCategory.values()
+                    val selectedCategory = viewModel.selectedCategory.value
 
                     Column() {
 
@@ -98,7 +99,6 @@ class RecipeListFragment : Fragment() {
                                         keyboardActions = KeyboardActions(onSearch = {
                                             viewModel.getSearchedRecipes(
                                                 1,
-                                                query
                                             )
                                             focusManager.clearFocus()
                                         }),
@@ -109,16 +109,17 @@ class RecipeListFragment : Fragment() {
                                     )
                                 }
 
-                                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                                LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 8.dp, bottom=8.dp)) {
                                     items(
                                         items = categories
                                     ) { category ->
                                         FoodCategoryChip(
                                             category = category.value,
+                                            isSelected = selectedCategory == category,
                                             onExecuteSearch = {
-                                                viewModel.onQueryChange(it)
-                                                viewModel.getSearchedRecipes(1, it)
-                                            }
+                                                viewModel.getSearchedRecipes(1)
+                                            },
+                                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged
                                         )
                                     }
                                 }

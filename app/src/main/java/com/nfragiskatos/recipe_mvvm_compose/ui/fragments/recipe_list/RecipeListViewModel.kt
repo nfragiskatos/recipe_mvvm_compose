@@ -34,24 +34,30 @@ class RecipeListViewModel @Inject constructor(
 
     val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
     val query = mutableStateOf("chicken")
+    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
     init {
-        getSearchedRecipes(1, query.value)
+        getSearchedRecipes(1)
     }
 
     fun onQueryChange(query: String) {
         this.query.value = query
     }
 
+    fun onSelectedCategoryChanged(category: String) {
+        val newCategory = getFoodCategory(category)
+        selectedCategory.value = newCategory
+        onQueryChange(category)
+    }
+
     fun getSearchedRecipes(
         page: Int,
-        query: String
     ) = viewModelScope.launch {
         try {
             if (isNetworkAvailable(app)) {
                 val response: Resource<RecipeAPIResponse> = getSearchedRecipesUseCase.execute(
                     page,
-                    query
+                    query.value
                 )
                 resource.value = response
             } else {
@@ -84,7 +90,6 @@ class RecipeListViewModel @Inject constructor(
     }
 
     private fun isNetworkAvailable(context: Context): Boolean {
-        if (context == null) return false
 
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
