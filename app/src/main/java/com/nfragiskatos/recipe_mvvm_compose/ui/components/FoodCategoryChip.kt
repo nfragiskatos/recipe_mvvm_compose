@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 fun FoodCategoryChip(
     category: String,
     isSelected: Boolean = false,
-    onSelectedCategoryChanged: (String) -> Unit,
+    onSelectedCategoryChanged: () -> Unit,
     onExecuteSearch: () -> Unit
 ) {
 
@@ -28,7 +28,7 @@ fun FoodCategoryChip(
             modifier = Modifier.toggleable(
                 value = isSelected,
                 onValueChange = {
-                    onSelectedCategoryChanged(category)
+                    onSelectedCategoryChanged()
                     onExecuteSearch()
                 })
         ) {

@@ -12,10 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -65,6 +62,7 @@ class RecipeListFragment : Fragment() {
                     val focusManager = LocalFocusManager.current
                     val categories = FoodCategory.values()
                     val selectedCategory = viewModel.selectedCategory.value
+                    val chipPosition = viewModel.chipPosition
 
                     Column() {
 
@@ -109,17 +107,19 @@ class RecipeListFragment : Fragment() {
                                     )
                                 }
 
-                                LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 8.dp, bottom=8.dp)) {
-                                    items(
+                                LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 8.dp, bottom=8.dp), state = LazyListState(chipPosition)) {
+                                    itemsIndexed(
                                         items = categories
-                                    ) { category ->
+                                    ) { index, category ->
                                         FoodCategoryChip(
                                             category = category.value,
                                             isSelected = selectedCategory == category,
                                             onExecuteSearch = {
                                                 viewModel.getSearchedRecipes(1)
                                             },
-                                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged
+                                            onSelectedCategoryChanged = {
+                                                viewModel.onSelectedCategoryChanged(category, index)
+                                            }
                                         )
                                     }
                                 }

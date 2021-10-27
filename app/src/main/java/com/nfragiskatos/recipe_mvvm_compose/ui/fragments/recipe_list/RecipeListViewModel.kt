@@ -35,6 +35,7 @@ class RecipeListViewModel @Inject constructor(
     val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
     val query = mutableStateOf("chicken")
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
+    var chipPosition: Int = 0
 
     init {
         getSearchedRecipes(1)
@@ -44,10 +45,10 @@ class RecipeListViewModel @Inject constructor(
         this.query.value = query
     }
 
-    fun onSelectedCategoryChanged(category: String) {
-        val newCategory = getFoodCategory(category)
-        selectedCategory.value = newCategory
-        onQueryChange(category)
+    fun onSelectedCategoryChanged(category: FoodCategory, position: Int) {
+        selectedCategory.value = category
+        chipPosition = position
+        onQueryChange(category.value)
     }
 
     fun getSearchedRecipes(
