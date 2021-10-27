@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.nfragiskatos.recipe_mvvm_compose.ui.components.FoodCategoryChip
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.RecipeCard
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,7 +70,7 @@ class RecipeListFragment : Fragment() {
                         Surface(
                             elevation = 8.dp,
                             modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colors.primary
+                            color = MaterialTheme.colors.surface
                         ) {
                             Column() {
                                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -112,13 +113,12 @@ class RecipeListFragment : Fragment() {
                                     items(
                                         items = categories
                                     ) { category ->
-                                        Text(
-                                            text = category.value,
-                                            style = MaterialTheme.typography.body2,
-                                            color = MaterialTheme.colors.onSecondary,
-                                            modifier = Modifier
-                                                .padding(8.dp)
-                                                .background(color = MaterialTheme.colors.secondary),
+                                        FoodCategoryChip(
+                                            category = category.value,
+                                            onExecuteSearch = {
+                                                viewModel.onQueryChange(it)
+                                                viewModel.getSearchedRecipes(1, it)
+                                            }
                                         )
                                     }
                                 }
