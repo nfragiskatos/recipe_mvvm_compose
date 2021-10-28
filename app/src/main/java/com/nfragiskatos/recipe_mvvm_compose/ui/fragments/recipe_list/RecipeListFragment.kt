@@ -5,13 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.nfragiskatos.recipe_mvvm_compose.ui.components.CircularIndeterminateProgressBar
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.RecipeCard
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.SearchAppBar
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
@@ -45,6 +49,7 @@ class RecipeListFragment : Fragment() {
                     val query = viewModel.query.value
                     val selectedCategory = viewModel.selectedCategory.value
                     val chipPosition = viewModel.chipPosition
+                    val loading = viewModel.loading.value
 
                     Column() {
 
@@ -57,19 +62,24 @@ class RecipeListFragment : Fragment() {
                             onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged
                         )
 
-                        LazyColumn() {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, item ->
-                                RecipeCard(
-                                    recipe = item,
-                                    onClick = {
-                                        Log.i(
-                                            "MY_TAG",
-                                            "You clicked on ${item.title}"
-                                        )
-                                    })
+                        Box(modifier = Modifier.fillMaxSize()) {
+
+                            LazyColumn() {
+                                itemsIndexed(
+                                    items = recipes
+                                ) { index, item ->
+                                    RecipeCard(
+                                        recipe = item,
+                                        onClick = {
+                                            Log.i(
+                                                "MY_TAG",
+                                                "You clicked on ${item.title}"
+                                            )
+                                        }
+                                    )
+                                }
                             }
+                            CircularIndeterminateProgressBar(isDisplayed = loading)
                         }
                     }
                 }

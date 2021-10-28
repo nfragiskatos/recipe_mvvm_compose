@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +19,7 @@ import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +38,7 @@ class RecipeListViewModel @Inject constructor(
     val query = mutableStateOf("chicken")
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     var chipPosition: Int = 0
+    val loading = mutableStateOf(false)
 
     init {
         getSearchedRecipes()
@@ -51,8 +54,28 @@ class RecipeListViewModel @Inject constructor(
         onQueryChange(category.value)
     }
 
+    private fun clearSelectedCategory() {
+        selectedCategory.value = null
+    }
+
+    private fun resetSearchState() {
+        resource.value = Resource.Success(RecipeAPIResponse(
+            count = 0,
+            next = "",
+            previous = "",
+            results = emptyList()
+        ))
+
+        if (selectedCategory.value?.value?.lowercase() != query.value.lowercase()) {
+            clearSelectedCategory()
+        }
+    }
+
     fun getSearchedRecipes(
     ) = viewModelScope.launch {
+        loading.value = true
+        resetSearchState()
+        delay(2000)
         try {
             if (isNetworkAvailable(app)) {
                 val response: Resource<RecipeAPIResponse> = getSearchedRecipesUseCase.execute(
@@ -69,7 +92,9 @@ class RecipeListViewModel @Inject constructor(
                 "MY_TAG",
                 e.message.toString()
             )
+            loading.value = false
         }
+        loading.value = false
     }
 
     fun getRecipeById(id: Int) = viewModelScope.launch {
