@@ -55,3 +55,27 @@ fun loadPictures(url: String, @DrawableRes defaultImage: Int) : MutableState<Bit
 
     return bitmapState
 }
+
+@Composable
+fun loadPictures(@DrawableRes drawable: Int) : MutableState<Bitmap?> {
+
+    val bitmapState: MutableState<Bitmap?> = remember {mutableStateOf(null)}
+
+    Glide.with(LocalContext.current)
+        .asBitmap()
+        .load(drawable)
+        .into(object: CustomTarget<Bitmap>() {
+            override fun onResourceReady(
+                resource: Bitmap,
+                transition: Transition<in Bitmap>?
+            ) {
+                bitmapState.value = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // intentionally blank
+            }
+        })
+
+    return bitmapState
+}
