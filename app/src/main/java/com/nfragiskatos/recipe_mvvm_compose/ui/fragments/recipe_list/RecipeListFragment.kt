@@ -5,20 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush.Companion.linearGradient
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.*
-import com.nfragiskatos.recipe_mvvm_compose.ui.components.HeartAnimationDefinition.HeartButtonState.ACTIVE
-import com.nfragiskatos.recipe_mvvm_compose.ui.components.HeartAnimationDefinition.HeartButtonState.IDLE
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,21 +86,37 @@ class RecipeListFragment : Fragment() {
 
 //                        PulseDemo()
 
-                        Box(modifier = Modifier.fillMaxSize()) {
+//                        GradientDemo()
 
-                            LazyColumn() {
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, item ->
-                                    RecipeCard(
-                                        recipe = item,
-                                        onClick = {
-                                            Log.i(
-                                                "MY_TAG",
-                                                "You clicked on ${item.title}"
-                                            )
-                                        }
-                                    )
+//                        ShimmerRecipeCardItem(
+//                            colors = listOf(
+//                                Color.LightGray.copy(alpha = 0.9f),
+//                                Color.LightGray.copy(alpha = 0.2f),
+//                                Color.LightGray.copy(alpha = 0.9f),
+//                            ),
+//                            cardHeight = 250.dp
+//                        )
+
+//                        LoadingRecipeListShimmer(cardHeight = 250.dp)
+
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            if (loading) {
+                                LoadingRecipeListShimmer(cardHeight = 250.dp)
+                            } else {
+                                LazyColumn() {
+                                    itemsIndexed(
+                                        items = recipes
+                                    ) { index, item ->
+                                        RecipeCard(
+                                            recipe = item,
+                                            onClick = {
+                                                Log.i(
+                                                    "MY_TAG",
+                                                    "You clicked on ${item.title}"
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             CircularIndeterminateProgressBar(isDisplayed = loading)
@@ -106,5 +125,34 @@ class RecipeListFragment : Fragment() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun GradientDemo() {
+    val colors = listOf<Color>(
+        Color.Blue,
+        Color.Red,
+        Color.Blue
+    )
+
+    val brush = linearGradient(
+        colors,
+        start = Offset(
+            200f,
+            200f
+        ),
+        end = Offset(
+            400f,
+            400f
+        )
+    )
+
+    Surface(shape = MaterialTheme.shapes.small) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(brush = brush)
+        )
     }
 }
