@@ -25,7 +25,7 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Cyan600,
     primaryVariant = Cyan300,
-    onPrimary = Black2,
+    onPrimary = Color.White,
     secondary = Color.White,
     secondaryVariant = Red300,
     onSecondary = Color.Black,
@@ -50,7 +50,7 @@ fun Recipe_mvvm_composeTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = QuickSandTypography,
         shapes = Shapes,
         content = content
     )
