@@ -1,5 +1,6 @@
 package com.nfragiskatos.recipe_mvvm_compose.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -8,40 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-//    primary = Purple200,
-//    primaryVariant = Purple700,
-//    secondary = Teal200
-
-    primary = Cyan200,
-    primaryVariant = Cyan600,
-    secondary = Red400,
-
+    primary = Cyan800,
+    primaryVariant = Color.White,
+    onPrimary = Color.White,
+    secondary = Black1,
+    onSecondary = Color.White,
+    error = RedErrorLight,
+    background = Color.Black,
+    onBackground = Color.White,
+    surface = Black1,
+    onSurface = Color.White,
     )
 
+@SuppressLint("ConflictingOnColor")
 private val LightColorPalette = lightColors(
-//    primary = Purple500,
-//    primaryVariant = Purple700,
-//    secondary = Teal200
-
     primary = Cyan600,
     primaryVariant = Cyan300,
-    secondary = Red400,
-
-    onPrimary = Color.Black,
+    onPrimary = Black2,
+    secondary = Color.White,
+    secondaryVariant = Red300,
     onSecondary = Color.Black,
-
-    background = LightGray,
-
-    onSurface = Color.Black,
-
-    /* Other default colors to override
-    background = Color.White,
+    background = Grey1,
     surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
+    onSurface = Black2,
+    error = RedErrorDark,
+    onError = RedErrorLight,
     onBackground = Color.Black,
-
-    */
 )
 
 @Composable

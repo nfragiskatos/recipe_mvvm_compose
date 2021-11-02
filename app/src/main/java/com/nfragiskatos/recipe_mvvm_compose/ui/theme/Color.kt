@@ -8,14 +8,23 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
 // ----- primary
+// light
+val Cyan300 = Color(0xFF4ECFD7)
+
+// dark
+val Cyan800 = Color(0xFF068287)
+
 // Main
-val Cyan300 = Color(0xFF4FDEE9)
+val Cyan600 = Color(0xFF00ABB7)
 
-// Light
-val Cyan200 = Color(0xFF8BFFFF)
+val Black1 = Color(0xFF222222)
+val Black2 = Color(0xFF000000)
 
-// Dark
-val Cyan600 = Color(0xFF00ACB7)
+
+val Grey1 = Color(0xFFF2F2F2)
+
+val RedErrorDark = Color(0xFFB00020)
+val RedErrorLight = Color(0xFFEF5350)
 
 
 // ----- Secondary

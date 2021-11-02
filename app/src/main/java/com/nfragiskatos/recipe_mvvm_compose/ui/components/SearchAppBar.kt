@@ -1,9 +1,6 @@
 package com.nfragiskatos.recipe_mvvm_compose.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -11,8 +8,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
@@ -28,8 +27,8 @@ fun SearchAppBar(
     getSearchedRecipes: () -> Unit,
     chipPosition: Int,
     selectedCategory: FoodCategory?,
-    onSelectedCategoryChanged: (FoodCategory, Int) -> Unit
-
+    onSelectedCategoryChanged: (FoodCategory, Int) -> Unit,
+    onToggleTheme: () -> Unit
 
 ) {
 
@@ -45,7 +44,8 @@ fun SearchAppBar(
             SearchAppBarTextField(
                 query = query,
                 onQueryChanged = onQueryChanged,
-                getSearchedRecipes = getSearchedRecipes
+                getSearchedRecipes = getSearchedRecipes,
+                onToggleTheme = onToggleTheme
             )
 
             SearchAppBarCategorySelector(
@@ -64,10 +64,14 @@ private fun SearchAppBarTextField(
     query: String,
     onQueryChanged: (String) -> Unit,
     getSearchedRecipes: () -> Unit,
+    onToggleTheme: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         TextField(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -98,6 +102,16 @@ private fun SearchAppBarTextField(
                 backgroundColor = MaterialTheme.colors.surface
             )
         )
+        IconButton(
+            onClick = onToggleTheme,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.MoreVert,
+                contentDescription = ""
+            )
+
+        }
     }
 }
 

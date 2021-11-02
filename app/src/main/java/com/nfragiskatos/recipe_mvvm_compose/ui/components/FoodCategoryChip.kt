@@ -22,7 +22,7 @@ fun FoodCategoryChip(
         modifier = Modifier.padding(end = 8.dp),
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium,
-        color = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.primary
+        color = if (isSelected) MaterialTheme.colors.secondaryVariant else MaterialTheme.colors.primary
     ) {
         Row(
             modifier = Modifier.toggleable(
