@@ -9,8 +9,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -21,6 +24,8 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.nfragiskatos.recipe_mvvm_compose.ui.RecipeApp
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.*
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
@@ -61,52 +66,28 @@ class RecipeListFragment : Fragment() {
                     val chipPosition = viewModel.chipPosition
                     val loading = viewModel.loading.value
 
-                    Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
-
-                        SearchAppBar(
-                            query = query,
-                            onQueryChanged = viewModel::onQueryChange,
-                            getSearchedRecipes = viewModel::getSearchedRecipes,
-                            chipPosition = chipPosition,
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                            onToggleTheme = application::toggleLightTheme
-                        )
-
-
-//                        Row(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(200.dp),
-//                            horizontalArrangement = Arrangement.Center
-//                        ) {
-//                            val state = remember { mutableStateOf(IDLE) }
-//                            AnimatedHeartButton(
-//                                modifier = Modifier,
-//                                buttonState = state,
-//                                onToggle = {
-//                                    state.value = if (state.value == ACTIVE) IDLE else ACTIVE
-//                                }
-//                            )
-//                        }
+                    Scaffold(
+                        topBar = {
+                            SearchAppBar(
+                                query = query,
+                                onQueryChanged = viewModel::onQueryChange,
+                                getSearchedRecipes = viewModel::getSearchedRecipes,
+                                chipPosition = chipPosition,
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                onToggleTheme = application::toggleLightTheme
+                            )
+                        },
+                        bottomBar = { MyBottomBar(findNavController()) },
+                        drawerContent = { MyDrawer()},
 
 
-//                        PulseDemo()
-
-//                        GradientDemo()
-
-//                        ShimmerRecipeCardItem(
-//                            colors = listOf(
-//                                Color.LightGray.copy(alpha = 0.9f),
-//                                Color.LightGray.copy(alpha = 0.2f),
-//                                Color.LightGray.copy(alpha = 0.9f),
-//                            ),
-//                            cardHeight = 250.dp
-//                        )
-
-//                        LoadingRecipeListShimmer(cardHeight = 250.dp)
-
-                        Box(modifier = Modifier.fillMaxSize()) {
+                        ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colors.background)
+                        ) {
                             if (loading) {
                                 LoadingRecipeListShimmer(cardHeight = 250.dp)
                             } else {
@@ -134,6 +115,54 @@ class RecipeListFragment : Fragment() {
         }
     }
 }
+
+@Composable
+fun MyBottomBar(
+    navController: NavController
+) {
+
+    BottomNavigation(elevation = 12.dp) {
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = ""
+                )
+            },
+            selected = false,
+            onClick = { })
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.ThumbUp,
+                    contentDescription = ""
+                )
+            },
+            selected = true,
+            onClick = { })
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = ""
+                )
+            },
+            selected = false,
+            onClick = { })
+    }
+}
+
+@Composable
+fun MyDrawer() {
+    Column() {
+        Text(text = "item 1")
+        Text(text = "item 2")
+        Text(text = "item 3")
+        Text(text = "item 4")
+        Text(text = "item 5")
+    }
+}
+
 
 @Composable
 fun GradientDemo() {
