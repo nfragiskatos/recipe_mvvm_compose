@@ -18,6 +18,7 @@ import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.RecipeAPIResponse
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetSearchedRecipesUseCase
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.RecipeListEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,10 +34,6 @@ class RecipeListViewModel @Inject constructor(
     private val getSearchedRecipesUseCase: GetSearchedRecipesUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : AndroidViewModel(app) {
-    init {
-        Log.i("MY_TAG", "RecipeListViewModel Dep - getSearchedRecipesUseCase = $getSearchedRecipesUseCase")
-        Log.i("MY_TAG", "RecipeListViewModel Dep - getRecipeByIdUseCase = $getRecipeByIdUseCase")
-    }
 
     val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
@@ -49,14 +46,38 @@ class RecipeListViewModel @Inject constructor(
     private var scrollPosition = 0
 
     init {
-        getSearchedRecipes()
+        onTriggerEvent(NewSearchEvent)
+    }
+
+    fun onTriggerEvent(event: RecipeListEvent) {
+        viewModelScope.launch {
+            try {
+                when (event) {
+                    NewSearchEvent -> {
+                        getSearchedRecipes()
+                    }
+                    NextPageEvent -> {
+                        nextPage()
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e(
+                    "MY_TAG",
+                    "onTriggerEvent Exception: $e, ${e.cause}"
+                )
+            }
+        }
     }
 
     fun onQueryChange(query: String) {
         this.query.value = query
     }
 
-    fun onSelectedCategoryChanged(category: FoodCategory, position: Int) {
+    fun onSelectedCategoryChanged(
+        category: FoodCategory,
+        position: Int
+    ) {
         selectedCategory.value = category
         chipPosition = position
         onQueryChange(category.value)
@@ -67,12 +88,14 @@ class RecipeListViewModel @Inject constructor(
     }
 
     private fun resetSearchState() {
-        resource.value = Resource.Success(RecipeAPIResponse(
-            count = 0,
-            next = "",
-            previous = "",
-            results = emptyList()
-        ))
+        resource.value = Resource.Success(
+            RecipeAPIResponse(
+                count = 0,
+                next = "",
+                previous = "",
+                results = emptyList()
+            )
+        )
         recipes.value = ArrayList()
         page.value = 1
         onChangeRecipeScrollPosition(0)
@@ -82,8 +105,7 @@ class RecipeListViewModel @Inject constructor(
         }
     }
 
-    fun getSearchedRecipes(
-    ) = viewModelScope.launch {
+    private suspend fun getSearchedRecipes() {
         loading.value = true
         resetSearchState()
         try {
@@ -108,20 +130,27 @@ class RecipeListViewModel @Inject constructor(
         loading.value = false
     }
 
-    fun nextPage() {
-        viewModelScope.launch {
-            // prevent duplicate events due to recompose happening to quickly
-            if ((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
-                loading.value = true
-                incrementPage()
-                Log.d("MY_TAG", "nextPage triggered: ${page.value}")
-                if (page.value > 1) {
-                    val result = getSearchedRecipesUseCase.execute(page.value, query.value)
-                    Log.d("MY_TAG", "nextPage: $result")
-                    appendRecipes(result.data?.results ?: ArrayList())
-                }
-                loading.value = false
+    private suspend fun nextPage() {
+        // prevent duplicate events due to recompose happening to quickly
+        if ((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+            loading.value = true
+            incrementPage()
+            Log.d(
+                "MY_TAG",
+                "nextPage triggered: ${page.value}"
+            )
+            if (page.value > 1) {
+                val result = getSearchedRecipesUseCase.execute(
+                    page.value,
+                    query.value
+                )
+                Log.d(
+                    "MY_TAG",
+                    "nextPage: $result"
+                )
+                appendRecipes(result.data?.results ?: ArrayList())
             }
+            loading.value = false
         }
     }
 

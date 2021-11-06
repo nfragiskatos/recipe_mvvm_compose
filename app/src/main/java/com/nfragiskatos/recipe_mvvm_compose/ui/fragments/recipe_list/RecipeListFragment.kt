@@ -36,6 +36,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.nfragiskatos.recipe_mvvm_compose.ui.RecipeApp
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.*
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.RecipeListEvent.*
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -103,7 +104,7 @@ class RecipeListFragment : Fragment() {
                                             )
                                         }
                                     } else {
-                                        viewModel.getSearchedRecipes()
+                                        viewModel.onTriggerEvent(NewSearchEvent)
                                     }
                                 },
                                 chipPosition = chipPosition,
@@ -134,7 +135,7 @@ class RecipeListFragment : Fragment() {
                                     ) { index, item ->
                                         viewModel.onChangeRecipeScrollPosition(index)
                                         if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                            viewModel.nextPage()
+                                            viewModel.onTriggerEvent(NextPageEvent)
                                         }
                                         RecipeCard(
                                             recipe = item,
