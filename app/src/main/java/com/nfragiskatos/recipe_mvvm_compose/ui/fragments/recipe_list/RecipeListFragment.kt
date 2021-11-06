@@ -80,11 +80,13 @@ class RecipeListFragment : Fragment() {
 
                 Recipe_mvvm_composeTheme(darkTheme = application.isDark.value) {
                     val resource = viewModel.resource.value
-                    val recipes = resource.data?.results ?: listOf()
+                    val recipes = viewModel.recipes.value
                     val query = viewModel.query.value
                     val selectedCategory = viewModel.selectedCategory.value
                     val chipPosition = viewModel.chipPosition
                     val loading = viewModel.loading.value
+
+                    val page = viewModel.page.value
 
                     Scaffold(
                         topBar = {
@@ -123,13 +125,17 @@ class RecipeListFragment : Fragment() {
                                 .fillMaxSize()
                                 .background(MaterialTheme.colors.background)
                         ) {
-                            if (loading) {
+                            if (loading && recipes.isEmpty()) {
                                 LoadingRecipeListShimmer(cardHeight = 250.dp)
                             } else {
                                 LazyColumn() {
                                     itemsIndexed(
                                         items = recipes
                                     ) { index, item ->
+                                        viewModel.onChangeRecipeScrollPosition(index)
+                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                                            viewModel.nextPage()
+                                        }
                                         RecipeCard(
                                             recipe = item,
                                             onClick = {

@@ -23,6 +23,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+const val PAGE_SIZE = 30
+
+
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
     private val app: Application,
@@ -35,10 +39,14 @@ class RecipeListViewModel @Inject constructor(
     }
 
     val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
+    val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
     val query = mutableStateOf("chicken")
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     var chipPosition: Int = 0
     val loading = mutableStateOf(false)
+    val page = mutableStateOf(1)
+
+    private var scrollPosition = 0
 
     init {
         getSearchedRecipes()
@@ -65,6 +73,9 @@ class RecipeListViewModel @Inject constructor(
             previous = "",
             results = emptyList()
         ))
+        recipes.value = ArrayList()
+        page.value = 1
+        onChangeRecipeScrollPosition(0)
 
         if (selectedCategory.value?.value?.lowercase() != query.value.lowercase()) {
             clearSelectedCategory()
@@ -75,7 +86,6 @@ class RecipeListViewModel @Inject constructor(
     ) = viewModelScope.launch {
         loading.value = true
         resetSearchState()
-        delay(2000)
         try {
             if (isNetworkAvailable(app)) {
                 val response: Resource<RecipeAPIResponse> = getSearchedRecipesUseCase.execute(
@@ -83,6 +93,7 @@ class RecipeListViewModel @Inject constructor(
                     query.value
                 )
                 resource.value = response
+                recipes.value = response.data?.results ?: ArrayList()
             } else {
                 resource.value = Resource.Error("Internet Not Available")
             }
@@ -95,6 +106,37 @@ class RecipeListViewModel @Inject constructor(
             loading.value = false
         }
         loading.value = false
+    }
+
+    fun nextPage() {
+        viewModelScope.launch {
+            // prevent duplicate events due to recompose happening to quickly
+            if ((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+                loading.value = true
+                incrementPage()
+                Log.d("MY_TAG", "nextPage triggered: ${page.value}")
+                if (page.value > 1) {
+                    val result = getSearchedRecipesUseCase.execute(page.value, query.value)
+                    Log.d("MY_TAG", "nextPage: $result")
+                    appendRecipes(result.data?.results ?: ArrayList())
+                }
+                loading.value = false
+            }
+        }
+    }
+
+    private fun incrementPage() {
+        page.value = page.value + 1
+    }
+
+    fun onChangeRecipeScrollPosition(position: Int) {
+        scrollPosition = position
+    }
+
+    private fun appendRecipes(recipes: List<Recipe>) {
+        val current = ArrayList(this.recipes.value)
+        current.addAll(recipes)
+        this.recipes.value = current
     }
 
     fun getRecipeById(id: Int) = viewModelScope.launch {
