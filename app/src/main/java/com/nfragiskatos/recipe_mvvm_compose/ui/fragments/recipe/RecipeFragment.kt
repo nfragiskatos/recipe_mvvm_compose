@@ -13,12 +13,16 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalUnitApi
+@AndroidEntryPoint
 class RecipeFragment : Fragment() {
 
     private var recipeId = mutableStateOf(-1)
+    private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +37,15 @@ class RecipeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 Recipe_mvvm_composeTheme() {
+
+                    val recipe = viewModel.recipe.value
+                    val loading = viewModel.loading.value
+
+                    viewModel.onRecipeIdChange(recipeId.value)
+
                     Surface() {
                         Text(
-                            text = "RECIPE FRAGMENT with id: ${recipeId.value}",
+                            text = "RECIPE FRAGMENT with recipe: ${recipe?.id}, ${recipe?.title}",
                             style = TextStyle(
                                 fontSize = TextUnit(25f, TextUnitType.Sp)
                             )

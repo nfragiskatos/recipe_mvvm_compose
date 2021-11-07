@@ -36,8 +36,7 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel @Inject constructor(
     private val app: Application,
     private val getSearchedRecipesUseCase: GetSearchedRecipesUseCase,
-    private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
-     private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(app) {
 
     val resource: MutableState<Resource<RecipeAPIResponse>> = mutableStateOf(Resource.Loading())
@@ -95,7 +94,7 @@ class RecipeListViewModel @Inject constructor(
     private suspend fun restoreState() {
         loading.value = true
         val results: MutableList<Recipe> = mutableListOf()
-        for (p in 1 .. page.value) {
+        for (p in 1..page.value) {
             val result = getSearchedRecipesUseCase.execute(
                 page.value,
                 query.value
@@ -202,23 +201,6 @@ class RecipeListViewModel @Inject constructor(
         val current = ArrayList(this.recipes.value)
         current.addAll(recipes)
         this.recipes.value = current
-    }
-
-    fun getRecipeById(id: Int) = viewModelScope.launch {
-        try {
-            if (isNetworkAvailable(app)) {
-                val response = getRecipeByIdUseCase.execute(id)
-
-            } else {
-
-            }
-
-        } catch (e: Exception) {
-            Log.i(
-                "MY_TAG",
-                e.message.toString()
-            )
-        }
     }
 
     private fun isNetworkAvailable(context: Context): Boolean {
