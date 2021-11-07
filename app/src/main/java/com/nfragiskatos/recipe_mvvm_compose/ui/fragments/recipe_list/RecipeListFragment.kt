@@ -7,12 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,7 +18,6 @@ import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush.Companion.linearGradient
@@ -34,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.nfragiskatos.recipe_mvvm_compose.ui.RecipeApp
 import com.nfragiskatos.recipe_mvvm_compose.ui.components.*
 import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe_list.RecipeListEvent.*
@@ -69,15 +66,7 @@ class RecipeListFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-
-                val isShowing = remember {
-                    mutableStateOf(false)
-                }
-
                 val scaffoldState = rememberScaffoldState()
-
-
-
 
                 Recipe_mvvm_composeTheme(darkTheme = application.isDark.value) {
                     val resource = viewModel.resource.value
@@ -113,80 +102,23 @@ class RecipeListFragment : Fragment() {
                                 onToggleTheme = application::toggleLightTheme
                             )
                         },
-//                        bottomBar = { MyBottomBar(findNavController()) },
-//                        drawerContent = { MyDrawer()},
                         scaffoldState = scaffoldState,
                         snackbarHost = {
                             scaffoldState.snackbarHostState
                         }
 
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(MaterialTheme.colors.background)
-                        ) {
-                            if (loading && recipes.isEmpty()) {
-                                LoadingRecipeListShimmer(cardHeight = 250.dp)
-                            } else {
-                                LazyColumn() {
-                                    itemsIndexed(
-                                        items = recipes
-                                    ) { index, item ->
-                                        viewModel.onChangeRecipeScrollPosition(index)
-                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                            viewModel.onTriggerEvent(NextPageEvent)
-                                        }
-                                        RecipeCard(
-                                            recipe = item,
-                                            onClick = {
-                                                Log.i(
-                                                    "MY_TAG",
-                                                    "You clicked on ${item.title}"
-                                                )
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                            CircularIndeterminateProgressBar(isDisplayed = loading)
-                            DefaultSnacbar(
-                                snackbarHostState = scaffoldState.snackbarHostState,
-                                modifier = Modifier.align(Alignment.BottomCenter)
-                            ) {
-                                scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                            }
-                        }
+                        RecipeList(
+                            loading = loading,
+                            recipes = recipes,
+                            page = page,
+                            scaffoldState = scaffoldState,
+                            navController = findNavController(),
+                            onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
+                            onTriggerEvent = viewModel::onTriggerEvent
+                        )
                     }
                 }
-
-                //                val snackbarHostState = remember {
-//                    SnackbarHostState()
-//                }
-//
-//                Column() {
-////                    Button(onClick = { isShowing.value = true }) {
-////                        Text(text = "Show Snackbar")
-////                    }
-//                    Button(onClick = {
-//                        lifecycleScope.launch {
-//                            snackbarHostState.showSnackbar(
-//                                message = "hey look a snackbar",
-//                                actionLabel = "Hide",
-//                                duration = SnackbarDuration.Short
-//                            )
-//                        }
-//                    }) {
-//                        Text(text = "Show Snackbar")
-//                    }
-//                    DecoupledSnackbarDemo(snackbarHostState = snackbarHostState)
-//                    SnackbarDemo(
-//                        isShowing = isShowing.value,
-//                        onHideSnackbar = {
-//                            isShowing.value = false
-//                        }
-//                    )
-//                }
             }
         }
     }
