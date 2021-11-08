@@ -22,12 +22,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RecipeFragment : Fragment() {
 
-    private var recipeId = mutableStateOf(-1)
     private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getInt("recipeId")?.let { recipeId.value = it }
+        arguments?.getInt("recipeId")?.let {
+            viewModel.onTriggerEvent(GetRecipeEvent(it))
+        }
     }
 
     override fun onCreateView(
@@ -41,7 +42,6 @@ class RecipeFragment : Fragment() {
 
                     val recipe = viewModel.recipe.value
                     val loading = viewModel.loading.value
-                    viewModel.onTriggerEvent(GetRecipeEvent(recipeId.value))
 
                     Surface() {
                         Text(

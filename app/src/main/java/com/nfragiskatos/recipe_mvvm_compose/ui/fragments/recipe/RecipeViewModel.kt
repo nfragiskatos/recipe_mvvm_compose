@@ -14,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
 import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe.RecipeEvent.GetRecipeEvent
-import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe.RecipeEvent.RestoreStateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,9 +32,11 @@ class RecipeViewModel @Inject constructor(
     val loading = mutableStateOf(false)
 
     init {
-        savedStateHandle.get<Int>(STATE_KEY_RECIPE_ID)?.let { id -> setRecipeId(id) }
-
-        onTriggerEvent(RestoreStateEvent)
+        savedStateHandle.get<Int>(STATE_KEY_RECIPE_ID)
+            ?.let { id ->
+                setRecipeId(id)
+                onTriggerEvent(GetRecipeEvent(id))
+            }
     }
 
     fun onTriggerEvent(event: RecipeEvent) {
@@ -46,12 +47,9 @@ class RecipeViewModel @Inject constructor(
                         setRecipeId(event.id)
                         getRecipeById()
                     }
-                    RestoreStateEvent -> {
-                        getRecipeById()
-                    }
                 }
 
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 Log.e(
                     "MY_TAG",
                     "onTriggerEvent Exception: $e, ${e.cause}"
@@ -62,7 +60,10 @@ class RecipeViewModel @Inject constructor(
 
     private fun setRecipeId(id: Int) {
         recipeId.value = id
-        savedStateHandle.set(STATE_KEY_RECIPE_ID, id)
+        savedStateHandle.set(
+            STATE_KEY_RECIPE_ID,
+            id
+        )
     }
 
     private suspend fun getRecipeById() {
