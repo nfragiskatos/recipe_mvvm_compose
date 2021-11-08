@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe.RecipeEvent.GetRecipeEvent
 import com.nfragiskatos.recipe_mvvm_compose.ui.theme.Recipe_mvvm_composeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,8 +41,7 @@ class RecipeFragment : Fragment() {
 
                     val recipe = viewModel.recipe.value
                     val loading = viewModel.loading.value
-
-                    viewModel.onRecipeIdChange(recipeId.value)
+                    viewModel.onTriggerEvent(GetRecipeEvent(recipeId.value))
 
                     Surface() {
                         Text(

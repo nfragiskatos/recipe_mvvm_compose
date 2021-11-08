@@ -9,40 +9,68 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.nfragiskatos.recipe_mvvm_compose.domain.model.Recipe
 import com.nfragiskatos.recipe_mvvm_compose.domain.usecase.GetRecipeByIdUseCase
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe.RecipeEvent.GetRecipeEvent
+import com.nfragiskatos.recipe_mvvm_compose.ui.fragments.recipe.RecipeEvent.RestoreStateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val STATE_KEY_RECIPE_ID = "recipe.state.recipe.id"
+
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val app: Application,
-    private val getRecipeByIdUseCase: GetRecipeByIdUseCase
+    private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(app) {
 
-    val recipeId = mutableStateOf(-1)
+    private val recipeId = mutableStateOf(-1)
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
     val loading = mutableStateOf(false)
 
-    fun onRecipeIdChange(id: Int) {
-        setRecipeId(id)
+    init {
+        savedStateHandle.get<Int>(STATE_KEY_RECIPE_ID)?.let { id -> setRecipeId(id) }
+
+        onTriggerEvent(RestoreStateEvent)
+    }
+
+    fun onTriggerEvent(event: RecipeEvent) {
         viewModelScope.launch {
-            getRecipeById(id)
+            try {
+                when (event) {
+                    is GetRecipeEvent -> {
+                        setRecipeId(event.id)
+                        getRecipeById()
+                    }
+                    RestoreStateEvent -> {
+                        getRecipeById()
+                    }
+                }
+
+            }catch (e: Exception) {
+                Log.e(
+                    "MY_TAG",
+                    "onTriggerEvent Exception: $e, ${e.cause}"
+                )
+            }
         }
     }
 
     private fun setRecipeId(id: Int) {
         recipeId.value = id
+        savedStateHandle.set(STATE_KEY_RECIPE_ID, id)
     }
 
-    private suspend fun getRecipeById(id: Int) {
+    private suspend fun getRecipeById() {
         loading.value = true
 
         try {
-            if (isNetworkAvailable(app)) {
-                val resource = getRecipeByIdUseCase.execute(id)
+            if (isNetworkAvailable(app) && recipeId.value !== -1) {
+                val resource = getRecipeByIdUseCase.execute(recipeId.value)
                 this.recipe.value = resource.data
             }
         } catch (e: Exception) {
